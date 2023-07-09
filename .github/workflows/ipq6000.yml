@@ -19,8 +19,8 @@ on:
   schedule:
     - cron: 0 20 1 * *
   
-  #watch:
-   #types: [started]
+  watch:
+   types: [started]
   
 
 jobs:
@@ -121,6 +121,14 @@ jobs:
         make download -j$(nproc)
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Mod IP Hostname
+      working-directory: ./openwrt
+      run: |
+        sed -i 's/Openwrt/Cmiot_AX18/' package/base-files/files/bin/config_generate
+        sed -i 's/192.168.1.1/192.168.6.1/g' package/base-files/files/bin/config_generate
+        sed -i 's/luci-theme-bootstrap/luci-theme-argonv3/g' feeds/luci/collections/luci/Makefile
+        sed -i 's/Bootstrap theme/Argonv3 theme/g' feeds/luci/collections/luci/Makefile
 
     - name: Build firmware
       working-directory: ./openwrt
